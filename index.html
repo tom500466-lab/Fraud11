@@ -1,0 +1,374 @@
+import React, { useState, useEffect } from 'react';
+import { Shield, AlertTriangle, Calculator, Search, Phone, DollarSign, Lock, Eye, CheckCircle, XCircle } from 'lucide-react';
+
+const App = () => {
+  const [activeTab, setActiveTab] = useState('home');
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'home': return <Home setActiveTab={setActiveTab} />;
+      case 'detector': return <ScamDetector />;
+      case 'calculator': return <GreedCalculator />;
+      case 'scenarios': return <LazyScenarios />;
+      case 'emergency': return <EmergencyHelp />;
+      default: return <Home setActiveTab={setActiveTab} />;
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-800 pb-16 md:pb-0">
+      <header className="bg-blue-900 text-white p-4 shadow-lg sticky top-0 z-50">
+        <div className="max-w-md mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Shield className="w-6 h-6 text-yellow-400" />
+            <h1 className="text-xl font-bold tracking-wider">防詐金鐘罩</h1>
+          </div>
+          <div className="text-xs bg-red-600 px-2 py-1 rounded-full animate-pulse">
+            全民反詐中
+          </div>
+        </div>
+      </header>
+
+      <main className="max-w-md mx-auto min-h-[80vh] bg-white shadow-xl overflow-hidden">
+        {renderContent()}
+      </main>
+
+      {/* Bottom Navigation for Mobile */}
+      <nav className="fixed bottom-0 w-full bg-white border-t border-slate-200 md:hidden z-50">
+        <div className="flex justify-around items-center h-16">
+          <NavIcon icon={<Shield size={20} />} label="首頁" active={activeTab === 'home'} onClick={() => setActiveTab('home')} />
+          <NavIcon icon={<Search size={20} />} label="檢測" active={activeTab === 'detector'} onClick={() => setActiveTab('detector')} />
+          <NavIcon icon={<Calculator size={20} />} label="算算看" active={activeTab === 'calculator'} onClick={() => setActiveTab('calculator')} />
+          <NavIcon icon={<Eye size={20} />} label="識破" active={activeTab === 'scenarios'} onClick={() => setActiveTab('scenarios')} />
+        </div>
+      </nav>
+
+      {/* Desktop Sidebar (Optional for larger screens) */}
+      <div className="hidden md:block fixed top-24 left-[calc(50%+240px)] w-48 space-y-2">
+         <div className="p-4 bg-white rounded-lg shadow border border-slate-200">
+            <h3 className="font-bold text-blue-900 mb-2">快速導覽</h3>
+            <button onClick={() => setActiveTab('home')} className={`block w-full text-left p-2 rounded ${activeTab === 'home' ? 'bg-blue-100 text-blue-800' : 'hover:bg-slate-50'}`}>首頁</button>
+            <button onClick={() => setActiveTab('detector')} className={`block w-full text-left p-2 rounded ${activeTab === 'detector' ? 'bg-blue-100 text-blue-800' : 'hover:bg-slate-50'}`}>詐騙檢測儀</button>
+            <button onClick={() => setActiveTab('calculator')} className={`block w-full text-left p-2 rounded ${activeTab === 'calculator' ? 'bg-blue-100 text-blue-800' : 'hover:bg-slate-50'}`}>貪婪計算機</button>
+            <button onClick={() => setActiveTab('scenarios')} className={`block w-full text-left p-2 rounded ${activeTab === 'scenarios' ? 'bg-blue-100 text-blue-800' : 'hover:bg-slate-50'}`}>懶人識破包</button>
+            <button onClick={() => setActiveTab('emergency')} className={`block w-full text-left p-2 rounded text-red-600 font-bold hover:bg-red-50 mt-4`}>被騙了怎麼辦？</button>
+         </div>
+      </div>
+    </div>
+  );
+};
+
+const NavIcon = ({ icon, label, active, onClick }) => (
+  <button 
+    onClick={onClick}
+    className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${active ? 'text-blue-600' : 'text-slate-400'}`}
+  >
+    {icon}
+    <span className="text-xs font-medium">{label}</span>
+  </button>
+);
+
+// --- Sections ---
+
+const Home = ({ setActiveTab }) => (
+  <div className="p-6 space-y-6 animate-fadeIn">
+    <div className="text-center space-y-2">
+      <h2 className="text-2xl font-bold text-slate-800">別讓你的辛苦錢<br/>變成詐騙集團的跑車</h2>
+      <p className="text-slate-500 text-sm">針對「貪心、懶惰、不懂行情」的專屬防護網</p>
+    </div>
+
+    <div className="grid grid-cols-1 gap-4">
+      <div 
+        onClick={() => setActiveTab('detector')}
+        className="bg-gradient-to-r from-red-500 to-orange-500 p-6 rounded-xl text-white shadow-lg transform active:scale-95 transition-transform cursor-pointer"
+      >
+        <div className="flex justify-between items-center">
+          <div>
+            <h3 className="text-xl font-bold flex items-center gap-2"><Search size={20}/> 快速檢測</h3>
+            <p className="text-red-100 text-sm mt-1">對方是不是在騙我？30秒測出風險</p>
+          </div>
+          <AlertTriangle size={32} className="opacity-80" />
+        </div>
+      </div>
+
+      <div 
+        onClick={() => setActiveTab('calculator')}
+        className="bg-white border-2 border-blue-100 p-6 rounded-xl shadow-sm hover:border-blue-300 transition-colors cursor-pointer"
+      >
+        <div className="flex justify-between items-center">
+          <div>
+            <h3 className="text-lg font-bold text-blue-900 flex items-center gap-2"><Calculator size={20}/> 貪婪計算機</h3>
+            <p className="text-slate-500 text-sm mt-1">那些「高獲利」若成真，世界首富早就是你</p>
+          </div>
+          <DollarSign size={32} className="text-green-500 opacity-80" />
+        </div>
+      </div>
+
+      <div 
+        onClick={() => setActiveTab('scenarios')}
+        className="bg-slate-100 p-6 rounded-xl cursor-pointer hover:bg-slate-200 transition-colors"
+      >
+        <div className="flex justify-between items-center">
+          <div>
+            <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2"><Eye size={20}/> 懶人識破包</h3>
+            <p className="text-slate-500 text-sm mt-1">不想動腦查證？看這些情境就懂</p>
+          </div>
+          <Lock size={32} className="text-slate-400" />
+        </div>
+      </div>
+    </div>
+
+    <div 
+        onClick={() => setActiveTab('emergency')}
+        className="mt-8 text-center p-4 border border-red-200 rounded-lg bg-red-50 cursor-pointer"
+    >
+        <p className="text-red-600 font-bold flex items-center justify-center gap-2">
+            <Phone size={16}/> 已經匯款或給出個資？點此急救
+        </p>
+    </div>
+  </div>
+);
+
+const ScamDetector = () => {
+  const [score, setScore] = useState(0);
+  const [showResult, setShowResult] = useState(false);
+  const [answers, setAnswers] = useState({});
+
+  const questions = [
+    { id: 1, text: "對方是否承諾「保證獲利」、「穩賺不賠」？", weight: 5 },
+    { id: 2, text: "是否要求你「先匯款」才能領取獎金或解除凍結？", weight: 5 },
+    { id: 3, text: "對方是否是透過交友軟體/IG認識，且從未視訊見面？", weight: 3 },
+    { id: 4, text: "是否要求你去買「虛擬貨幣(USDT)」或「遊戲點數」？", weight: 4 },
+    { id: 5, text: "是否告訴你這是一個「秘密」、「漏洞」或「內線交易」？", weight: 3 },
+    { id: 6, text: "是否把你加入一個很多人貼獲利截圖的 LINE 群組？", weight: 3 },
+  ];
+
+  const toggleAnswer = (id, weight) => {
+    setAnswers(prev => ({ ...prev, [id]: !prev[id] }));
+    setScore(prev => answers[id] ? prev - weight : prev + weight);
+  };
+
+  const getRiskLevel = () => {
+    if (score === 0) return { text: "目前安全", color: "text-green-600", bg: "bg-green-100", desc: "但仍需保持警惕，不要輕信陌生人。" };
+    if (score < 4) return { text: "中度風險", color: "text-yellow-600", bg: "bg-yellow-100", desc: "有詐騙跡象。請勿匯款，立即向親友或165查證。" };
+    return { text: "極度危險！是詐騙！", color: "text-red-600", bg: "bg-red-100", desc: "這是典型的詐騙手法！絕對不要匯款！立刻封鎖對方！" };
+  };
+
+  const result = getRiskLevel();
+
+  return (
+    <div className="p-6 pb-24">
+      <h2 className="text-2xl font-bold mb-4 text-center">詐騙照妖鏡</h2>
+      <p className="text-slate-500 mb-6 text-center text-sm">懶得查證沒關係，勾選下面符合的情況，幫你判斷。</p>
+      
+      <div className="space-y-3">
+        {questions.map(q => (
+          <div 
+            key={q.id} 
+            onClick={() => toggleAnswer(q.id, q.weight)}
+            className={`p-4 rounded-lg border cursor-pointer transition-all flex items-start gap-3 ${answers[q.id] ? 'border-red-500 bg-red-50' : 'border-slate-200 hover:bg-slate-50'}`}
+          >
+            <div className={`mt-1 w-5 h-5 rounded-full border flex items-center justify-center shrink-0 ${answers[q.id] ? 'bg-red-500 border-red-500' : 'border-slate-300'}`}>
+              {answers[q.id] && <CheckCircle size={14} className="text-white" />}
+            </div>
+            <span className={answers[q.id] ? 'font-medium text-red-800' : 'text-slate-700'}>{q.text}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-8 p-6 rounded-xl bg-slate-800 text-white text-center">
+        <p className="text-slate-400 text-sm uppercase tracking-widest mb-2">檢測結果</p>
+        <div className={`text-3xl font-bold mb-2 ${score > 3 ? 'text-red-400 animate-pulse' : 'text-green-400'}`}>
+             {score > 0 ? `${score * 10}% 詐騙機率` : '尚未檢測出風險'}
+        </div>
+        {score > 0 && (
+            <div className={`mt-4 p-4 rounded-lg ${result.bg} ${result.color} font-bold`}>
+                {result.text}
+                <p className="text-sm font-normal mt-1 opacity-90">{result.desc}</p>
+            </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const GreedCalculator = () => {
+  const [principal, setPrincipal] = useState(100000);
+  const [rate, setRate] = useState(10); // Monthly rate
+  const [period, setPeriod] = useState(3); // Years
+  
+  // Format currency
+  const fmt = (num) => new Intl.NumberFormat('zh-TW', { style: 'currency', currency: 'TWD', maximumFractionDigits: 0 }).format(num);
+
+  const scamReturn = principal * Math.pow(1 + (rate / 100), period * 12);
+  const legitReturn = principal * Math.pow(1 + (0.008), period * 12); // Assuming roughly 10% annual / 12 ~ 0.8% monthly (Optimistic market)
+
+  return (
+    <div className="p-6 pb-24">
+      <h2 className="text-2xl font-bold mb-2 flex items-center gap-2"><Calculator className="text-blue-600"/> 貪婪計算機</h2>
+      <p className="text-slate-500 text-sm mb-6">對方說每個月獲利很高？輸入進去，看看數學怎麼打臉。</p>
+
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <label className="text-sm font-bold text-slate-700">對方叫你投入多少本金？ (NT$)</label>
+          <input 
+            type="number" 
+            value={principal} 
+            onChange={(e) => setPrincipal(Number(e.target.value))}
+            className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-lg font-mono"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-sm font-bold text-slate-700">對方承諾「月」獲利幾 %？</label>
+          <div className="flex items-center gap-4">
+            <input 
+              type="range" min="1" max="50" value={rate} 
+              onChange={(e) => setRate(Number(e.target.value))}
+              className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer"
+            />
+            <span className="text-xl font-bold text-red-600 w-16 text-right">{rate}%</span>
+          </div>
+          <p className="text-xs text-slate-400">註：股神巴菲特平均「年」獲利也才約 20% (月約 1.6%)</p>
+        </div>
+
+        <div className="space-y-2">
+            <label className="text-sm font-bold text-slate-700">如果不領出，複利滾 {period} 年...</label>
+            <input 
+              type="range" min="1" max="10" value={period} 
+              onChange={(e) => setPeriod(Number(e.target.value))}
+              className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer"
+            />
+            <span className="text-sm text-slate-600 float-right">{period} 年</span>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 mt-8">
+            <div className="bg-red-50 border-2 border-red-100 p-4 rounded-xl relative overflow-hidden">
+                <div className="absolute top-0 right-0 bg-red-500 text-white text-xs px-2 py-1 rounded-bl">詐騙話術</div>
+                <p className="text-sm text-slate-500">詐騙承諾的金額：</p>
+                <p className="text-2xl font-bold text-red-600 break-words font-mono mt-1">
+                    {scamReturn > 100000000000 ? '超過全世界的錢 (太假了!)' : fmt(scamReturn)}
+                </p>
+                <p className="text-xs text-red-400 mt-2">
+                    {scamReturn > principal * 5 ? '醒醒吧！如果這麼好賺，他為什麼要告訴你？他為什麼不自己去借高利貸來賺？' : ''}
+                </p>
+            </div>
+
+            <div className="bg-green-50 border border-green-100 p-4 rounded-xl">
+                <div className="flex justify-between">
+                    <span className="text-sm text-slate-500">正常投資 (年化約10%)：</span>
+                </div>
+                <p className="text-xl font-bold text-green-700 font-mono mt-1">{fmt(legitReturn)}</p>
+                <p className="text-xs text-green-600 mt-1">這才是合理的市場行情。</p>
+            </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const LazyScenarios = () => {
+    const scenarios = [
+        {
+            title: "假交友 (殺豬盤)",
+            icon: "🐷",
+            desc: "正妹/帥哥突然加你，聊投資、聊未來，不視訊見面。",
+            action: "立刻要求視訊通話，拒絕談錢。",
+            tag: "懶人包"
+        },
+        {
+            title: "假網拍/解除分期",
+            icon: "📦",
+            desc: "說你誤設成分期付款，要去ATM或網銀操作解除。",
+            action: "ATM不能解除分期！直接掛斷，打給銀行。",
+            tag: "高頻發"
+        },
+        {
+            title: "假投資群組",
+            icon: "📈",
+            desc: "老師帶牌、助理報明牌，群組裡每個人都說賺翻了。",
+            action: "群組裡的其他人都是樁腳(演員)。退出群組。",
+            tag: "貪心陷阱"
+        },
+        {
+            title: "打字/家庭代工",
+            icon: "✍️",
+            desc: "工作輕鬆簡單，但要你先寄提款卡或存摺去「登記」。",
+            action: "寄出存摺你就變成「人頭帳戶」(共犯)了！",
+            tag: "找工作"
+        }
+    ];
+
+    return (
+        <div className="p-6 pb-24">
+            <h2 className="text-2xl font-bold mb-4">懶人識破包</h2>
+            <p className="text-slate-500 mb-6 text-sm">遇到以下狀況？不用動腦想，照著做就對了。</p>
+            
+            <div className="grid gap-4">
+                {scenarios.map((s, idx) => (
+                    <div key={idx} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                        <div className="flex justify-between items-start mb-2">
+                            <div className="text-3xl bg-slate-100 rounded-full w-12 h-12 flex items-center justify-center">{s.icon}</div>
+                            <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">{s.tag}</span>
+                        </div>
+                        <h3 className="font-bold text-lg text-slate-800 mb-1">{s.title}</h3>
+                        <p className="text-slate-600 text-sm mb-3">{s.desc}</p>
+                        <div className="bg-red-50 p-3 rounded-lg border-l-4 border-red-500">
+                            <p className="text-red-800 text-xs font-bold">❌ 破解法：</p>
+                            <p className="text-red-700 text-sm">{s.action}</p>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+const EmergencyHelp = () => (
+    <div className="p-6 pb-24 animate-fadeIn">
+        <div className="bg-red-600 text-white p-6 rounded-xl shadow-lg mb-6">
+            <h2 className="text-2xl font-bold mb-2 flex items-center gap-2"><AlertTriangle/> 緊急處置</h2>
+            <p className="opacity-90">如果你已經把錢匯出去，或提供了證件照片...</p>
+        </div>
+
+        <div className="space-y-4">
+            <div className="flex gap-4 items-start">
+                <div className="bg-slate-800 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold">1</div>
+                <div>
+                    <h3 className="font-bold text-lg">撥打 165 反詐騙專線</h3>
+                    <p className="text-slate-600 text-sm">這是最快的方法。或是立刻撥打 110 報警。</p>
+                    <a href="tel:165" className="inline-block mt-2 bg-red-600 text-white px-4 py-2 rounded-lg font-bold shadow active:scale-95 transition-transform">撥打 165</a>
+                </div>
+            </div>
+
+            <div className="w-full border-t border-slate-200"></div>
+
+            <div className="flex gap-4 items-start">
+                <div className="bg-slate-800 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold">2</div>
+                <div>
+                    <h3 className="font-bold text-lg">通知銀行「圈存」</h3>
+                    <p className="text-slate-600 text-sm">立刻打給你的匯款銀行，告知遭詐騙，要求啟動「圈存」機制（暫時凍結對方帳戶24小時），爭取時間。</p>
+                </div>
+            </div>
+
+            <div className="w-full border-t border-slate-200"></div>
+
+            <div className="flex gap-4 items-start">
+                <div className="bg-slate-800 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold">3</div>
+                <div>
+                    <h3 className="font-bold text-lg">保存證據</h3>
+                    <p className="text-slate-600 text-sm">截圖所有對話紀錄、匯款單據、對方帳號資訊、網址連結。不要刪除對話！</p>
+                </div>
+            </div>
+        </div>
+
+        <div className="mt-8 bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+            <h4 className="font-bold text-yellow-800 mb-1">⚠️ 還是要小心「二次詐騙」</h4>
+            <p className="text-sm text-yellow-700">
+                網路上聲稱可以「幫你把錢討回來」的律師、駭客，<span className="font-bold underline">全部都是詐騙</span>！絕對不要相信！只有警察能幫你。
+            </p>
+        </div>
+    </div>
+);
+
+export default App;
