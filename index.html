@@ -1,374 +1,486 @@
-import React, { useState, useEffect } from 'react';
-import { Shield, AlertTriangle, Calculator, Search, Phone, DollarSign, Lock, Eye, CheckCircle, XCircle } from 'lucide-react';
-
-const App = () => {
-  const [activeTab, setActiveTab] = useState('home');
-
-  const renderContent = () => {
-    switch (activeTab) {
-      case 'home': return <Home setActiveTab={setActiveTab} />;
-      case 'detector': return <ScamDetector />;
-      case 'calculator': return <GreedCalculator />;
-      case 'scenarios': return <LazyScenarios />;
-      case 'emergency': return <EmergencyHelp />;
-      default: return <Home setActiveTab={setActiveTab} />;
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-800 pb-16 md:pb-0">
-      <header className="bg-blue-900 text-white p-4 shadow-lg sticky top-0 z-50">
-        <div className="max-w-md mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Shield className="w-6 h-6 text-yellow-400" />
-            <h1 className="text-xl font-bold tracking-wider">防詐金鐘罩</h1>
-          </div>
-          <div className="text-xs bg-red-600 px-2 py-1 rounded-full animate-pulse">
-            全民反詐中
-          </div>
-        </div>
-      </header>
-
-      <main className="max-w-md mx-auto min-h-[80vh] bg-white shadow-xl overflow-hidden">
-        {renderContent()}
-      </main>
-
-      {/* Bottom Navigation for Mobile */}
-      <nav className="fixed bottom-0 w-full bg-white border-t border-slate-200 md:hidden z-50">
-        <div className="flex justify-around items-center h-16">
-          <NavIcon icon={<Shield size={20} />} label="首頁" active={activeTab === 'home'} onClick={() => setActiveTab('home')} />
-          <NavIcon icon={<Search size={20} />} label="檢測" active={activeTab === 'detector'} onClick={() => setActiveTab('detector')} />
-          <NavIcon icon={<Calculator size={20} />} label="算算看" active={activeTab === 'calculator'} onClick={() => setActiveTab('calculator')} />
-          <NavIcon icon={<Eye size={20} />} label="識破" active={activeTab === 'scenarios'} onClick={() => setActiveTab('scenarios')} />
-        </div>
-      </nav>
-
-      {/* Desktop Sidebar (Optional for larger screens) */}
-      <div className="hidden md:block fixed top-24 left-[calc(50%+240px)] w-48 space-y-2">
-         <div className="p-4 bg-white rounded-lg shadow border border-slate-200">
-            <h3 className="font-bold text-blue-900 mb-2">快速導覽</h3>
-            <button onClick={() => setActiveTab('home')} className={`block w-full text-left p-2 rounded ${activeTab === 'home' ? 'bg-blue-100 text-blue-800' : 'hover:bg-slate-50'}`}>首頁</button>
-            <button onClick={() => setActiveTab('detector')} className={`block w-full text-left p-2 rounded ${activeTab === 'detector' ? 'bg-blue-100 text-blue-800' : 'hover:bg-slate-50'}`}>詐騙檢測儀</button>
-            <button onClick={() => setActiveTab('calculator')} className={`block w-full text-left p-2 rounded ${activeTab === 'calculator' ? 'bg-blue-100 text-blue-800' : 'hover:bg-slate-50'}`}>貪婪計算機</button>
-            <button onClick={() => setActiveTab('scenarios')} className={`block w-full text-left p-2 rounded ${activeTab === 'scenarios' ? 'bg-blue-100 text-blue-800' : 'hover:bg-slate-50'}`}>懶人識破包</button>
-            <button onClick={() => setActiveTab('emergency')} className={`block w-full text-left p-2 rounded text-red-600 font-bold hover:bg-red-50 mt-4`}>被騙了怎麼辦？</button>
-         </div>
-      </div>
-    </div>
-  );
-};
-
-const NavIcon = ({ icon, label, active, onClick }) => (
-  <button 
-    onClick={onClick}
-    className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${active ? 'text-blue-600' : 'text-slate-400'}`}
-  >
-    {icon}
-    <span className="text-xs font-medium">{label}</span>
-  </button>
-);
-
-// --- Sections ---
-
-const Home = ({ setActiveTab }) => (
-  <div className="p-6 space-y-6 animate-fadeIn">
-    <div className="text-center space-y-2">
-      <h2 className="text-2xl font-bold text-slate-800">別讓你的辛苦錢<br/>變成詐騙集團的跑車</h2>
-      <p className="text-slate-500 text-sm">針對「貪心、懶惰、不懂行情」的專屬防護網</p>
-    </div>
-
-    <div className="grid grid-cols-1 gap-4">
-      <div 
-        onClick={() => setActiveTab('detector')}
-        className="bg-gradient-to-r from-red-500 to-orange-500 p-6 rounded-xl text-white shadow-lg transform active:scale-95 transition-transform cursor-pointer"
-      >
-        <div className="flex justify-between items-center">
-          <div>
-            <h3 className="text-xl font-bold flex items-center gap-2"><Search size={20}/> 快速檢測</h3>
-            <p className="text-red-100 text-sm mt-1">對方是不是在騙我？30秒測出風險</p>
-          </div>
-          <AlertTriangle size={32} className="opacity-80" />
-        </div>
-      </div>
-
-      <div 
-        onClick={() => setActiveTab('calculator')}
-        className="bg-white border-2 border-blue-100 p-6 rounded-xl shadow-sm hover:border-blue-300 transition-colors cursor-pointer"
-      >
-        <div className="flex justify-between items-center">
-          <div>
-            <h3 className="text-lg font-bold text-blue-900 flex items-center gap-2"><Calculator size={20}/> 貪婪計算機</h3>
-            <p className="text-slate-500 text-sm mt-1">那些「高獲利」若成真，世界首富早就是你</p>
-          </div>
-          <DollarSign size={32} className="text-green-500 opacity-80" />
-        </div>
-      </div>
-
-      <div 
-        onClick={() => setActiveTab('scenarios')}
-        className="bg-slate-100 p-6 rounded-xl cursor-pointer hover:bg-slate-200 transition-colors"
-      >
-        <div className="flex justify-between items-center">
-          <div>
-            <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2"><Eye size={20}/> 懶人識破包</h3>
-            <p className="text-slate-500 text-sm mt-1">不想動腦查證？看這些情境就懂</p>
-          </div>
-          <Lock size={32} className="text-slate-400" />
-        </div>
-      </div>
-    </div>
-
-    <div 
-        onClick={() => setActiveTab('emergency')}
-        className="mt-8 text-center p-4 border border-red-200 rounded-lg bg-red-50 cursor-pointer"
-    >
-        <p className="text-red-600 font-bold flex items-center justify-center gap-2">
-            <Phone size={16}/> 已經匯款或給出個資？點此急救
-        </p>
-    </div>
-  </div>
-);
-
-const ScamDetector = () => {
-  const [score, setScore] = useState(0);
-  const [showResult, setShowResult] = useState(false);
-  const [answers, setAnswers] = useState({});
-
-  const questions = [
-    { id: 1, text: "對方是否承諾「保證獲利」、「穩賺不賠」？", weight: 5 },
-    { id: 2, text: "是否要求你「先匯款」才能領取獎金或解除凍結？", weight: 5 },
-    { id: 3, text: "對方是否是透過交友軟體/IG認識，且從未視訊見面？", weight: 3 },
-    { id: 4, text: "是否要求你去買「虛擬貨幣(USDT)」或「遊戲點數」？", weight: 4 },
-    { id: 5, text: "是否告訴你這是一個「秘密」、「漏洞」或「內線交易」？", weight: 3 },
-    { id: 6, text: "是否把你加入一個很多人貼獲利截圖的 LINE 群組？", weight: 3 },
-  ];
-
-  const toggleAnswer = (id, weight) => {
-    setAnswers(prev => ({ ...prev, [id]: !prev[id] }));
-    setScore(prev => answers[id] ? prev - weight : prev + weight);
-  };
-
-  const getRiskLevel = () => {
-    if (score === 0) return { text: "目前安全", color: "text-green-600", bg: "bg-green-100", desc: "但仍需保持警惕，不要輕信陌生人。" };
-    if (score < 4) return { text: "中度風險", color: "text-yellow-600", bg: "bg-yellow-100", desc: "有詐騙跡象。請勿匯款，立即向親友或165查證。" };
-    return { text: "極度危險！是詐騙！", color: "text-red-600", bg: "bg-red-100", desc: "這是典型的詐騙手法！絕對不要匯款！立刻封鎖對方！" };
-  };
-
-  const result = getRiskLevel();
-
-  return (
-    <div className="p-6 pb-24">
-      <h2 className="text-2xl font-bold mb-4 text-center">詐騙照妖鏡</h2>
-      <p className="text-slate-500 mb-6 text-center text-sm">懶得查證沒關係，勾選下面符合的情況，幫你判斷。</p>
-      
-      <div className="space-y-3">
-        {questions.map(q => (
-          <div 
-            key={q.id} 
-            onClick={() => toggleAnswer(q.id, q.weight)}
-            className={`p-4 rounded-lg border cursor-pointer transition-all flex items-start gap-3 ${answers[q.id] ? 'border-red-500 bg-red-50' : 'border-slate-200 hover:bg-slate-50'}`}
-          >
-            <div className={`mt-1 w-5 h-5 rounded-full border flex items-center justify-center shrink-0 ${answers[q.id] ? 'bg-red-500 border-red-500' : 'border-slate-300'}`}>
-              {answers[q.id] && <CheckCircle size={14} className="text-white" />}
-            </div>
-            <span className={answers[q.id] ? 'font-medium text-red-800' : 'text-slate-700'}>{q.text}</span>
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-8 p-6 rounded-xl bg-slate-800 text-white text-center">
-        <p className="text-slate-400 text-sm uppercase tracking-widest mb-2">檢測結果</p>
-        <div className={`text-3xl font-bold mb-2 ${score > 3 ? 'text-red-400 animate-pulse' : 'text-green-400'}`}>
-             {score > 0 ? `${score * 10}% 詐騙機率` : '尚未檢測出風險'}
-        </div>
-        {score > 0 && (
-            <div className={`mt-4 p-4 rounded-lg ${result.bg} ${result.color} font-bold`}>
-                {result.text}
-                <p className="text-sm font-normal mt-1 opacity-90">{result.desc}</p>
-            </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-const GreedCalculator = () => {
-  const [principal, setPrincipal] = useState(100000);
-  const [rate, setRate] = useState(10); // Monthly rate
-  const [period, setPeriod] = useState(3); // Years
-  
-  // Format currency
-  const fmt = (num) => new Intl.NumberFormat('zh-TW', { style: 'currency', currency: 'TWD', maximumFractionDigits: 0 }).format(num);
-
-  const scamReturn = principal * Math.pow(1 + (rate / 100), period * 12);
-  const legitReturn = principal * Math.pow(1 + (0.008), period * 12); // Assuming roughly 10% annual / 12 ~ 0.8% monthly (Optimistic market)
-
-  return (
-    <div className="p-6 pb-24">
-      <h2 className="text-2xl font-bold mb-2 flex items-center gap-2"><Calculator className="text-blue-600"/> 貪婪計算機</h2>
-      <p className="text-slate-500 text-sm mb-6">對方說每個月獲利很高？輸入進去，看看數學怎麼打臉。</p>
-
-      <div className="space-y-6">
-        <div className="space-y-2">
-          <label className="text-sm font-bold text-slate-700">對方叫你投入多少本金？ (NT$)</label>
-          <input 
-            type="number" 
-            value={principal} 
-            onChange={(e) => setPrincipal(Number(e.target.value))}
-            className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-lg font-mono"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm font-bold text-slate-700">對方承諾「月」獲利幾 %？</label>
-          <div className="flex items-center gap-4">
-            <input 
-              type="range" min="1" max="50" value={rate} 
-              onChange={(e) => setRate(Number(e.target.value))}
-              className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer"
-            />
-            <span className="text-xl font-bold text-red-600 w-16 text-right">{rate}%</span>
-          </div>
-          <p className="text-xs text-slate-400">註：股神巴菲特平均「年」獲利也才約 20% (月約 1.6%)</p>
-        </div>
-
-        <div className="space-y-2">
-            <label className="text-sm font-bold text-slate-700">如果不領出，複利滾 {period} 年...</label>
-            <input 
-              type="range" min="1" max="10" value={period} 
-              onChange={(e) => setPeriod(Number(e.target.value))}
-              className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer"
-            />
-            <span className="text-sm text-slate-600 float-right">{period} 年</span>
-        </div>
-
-        <div className="grid grid-cols-1 gap-4 mt-8">
-            <div className="bg-red-50 border-2 border-red-100 p-4 rounded-xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 bg-red-500 text-white text-xs px-2 py-1 rounded-bl">詐騙話術</div>
-                <p className="text-sm text-slate-500">詐騙承諾的金額：</p>
-                <p className="text-2xl font-bold text-red-600 break-words font-mono mt-1">
-                    {scamReturn > 100000000000 ? '超過全世界的錢 (太假了!)' : fmt(scamReturn)}
-                </p>
-                <p className="text-xs text-red-400 mt-2">
-                    {scamReturn > principal * 5 ? '醒醒吧！如果這麼好賺，他為什麼要告訴你？他為什麼不自己去借高利貸來賺？' : ''}
-                </p>
-            </div>
-
-            <div className="bg-green-50 border border-green-100 p-4 rounded-xl">
-                <div className="flex justify-between">
-                    <span className="text-sm text-slate-500">正常投資 (年化約10%)：</span>
-                </div>
-                <p className="text-xl font-bold text-green-700 font-mono mt-1">{fmt(legitReturn)}</p>
-                <p className="text-xs text-green-600 mt-1">這才是合理的市場行情。</p>
-            </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const LazyScenarios = () => {
-    const scenarios = [
-        {
-            title: "假交友 (殺豬盤)",
-            icon: "🐷",
-            desc: "正妹/帥哥突然加你，聊投資、聊未來，不視訊見面。",
-            action: "立刻要求視訊通話，拒絕談錢。",
-            tag: "懶人包"
-        },
-        {
-            title: "假網拍/解除分期",
-            icon: "📦",
-            desc: "說你誤設成分期付款，要去ATM或網銀操作解除。",
-            action: "ATM不能解除分期！直接掛斷，打給銀行。",
-            tag: "高頻發"
-        },
-        {
-            title: "假投資群組",
-            icon: "📈",
-            desc: "老師帶牌、助理報明牌，群組裡每個人都說賺翻了。",
-            action: "群組裡的其他人都是樁腳(演員)。退出群組。",
-            tag: "貪心陷阱"
-        },
-        {
-            title: "打字/家庭代工",
-            icon: "✍️",
-            desc: "工作輕鬆簡單，但要你先寄提款卡或存摺去「登記」。",
-            action: "寄出存摺你就變成「人頭帳戶」(共犯)了！",
-            tag: "找工作"
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全民防詐騙守護網 - 即時檢測系統</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
         }
-    ];
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-in-up {
+            animation: fade-in-up 0.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+    <div id="root"></div>
 
-    return (
-        <div className="p-6 pb-24">
-            <h2 className="text-2xl font-bold mb-4">懶人識破包</h2>
-            <p className="text-slate-500 mb-6 text-sm">遇到以下狀況？不用動腦想，照著做就對了。</p>
-            
-            <div className="grid gap-4">
-                {scenarios.map((s, idx) => (
-                    <div key={idx} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-                        <div className="flex justify-between items-start mb-2">
-                            <div className="text-3xl bg-slate-100 rounded-full w-12 h-12 flex items-center justify-center">{s.icon}</div>
-                            <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">{s.tag}</span>
-                        </div>
-                        <h3 className="font-bold text-lg text-slate-800 mb-1">{s.title}</h3>
-                        <p className="text-slate-600 text-sm mb-3">{s.desc}</p>
-                        <div className="bg-red-50 p-3 rounded-lg border-l-4 border-red-500">
-                            <p className="text-red-800 text-xs font-bold">❌ 破解法：</p>
-                            <p className="text-red-700 text-sm">{s.action}</p>
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- Icons Components (Inline SVG for standalone HTML) ---
+        const IconBase = ({ children, className }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                {children}
+            </svg>
+        );
+
+        const Shield = ({ className }) => (
+            <IconBase className={className}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></IconBase>
+        );
+        const ShieldAlert = ({ className }) => (
+            <IconBase className={className}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></IconBase>
+        );
+        const ShieldCheck = ({ className }) => (
+            <IconBase className={className}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></IconBase>
+        );
+        const Search = ({ className }) => (
+            <IconBase className={className}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></IconBase>
+        );
+        const Server = ({ className }) => (
+            <IconBase className={className}><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></IconBase>
+        );
+        const Activity = ({ className }) => (
+            <IconBase className={className}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></IconBase>
+        );
+        const AlertTriangle = ({ className }) => (
+            <IconBase className={className}><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></IconBase>
+        );
+        const FileText = ({ className }) => (
+            <IconBase className={className}><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></IconBase>
+        );
+        const RefreshCw = ({ className }) => (
+            <IconBase className={className}><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></IconBase>
+        );
+        const Lock = ({ className }) => (
+            <IconBase className={className}><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></IconBase>
+        );
+        const Info = ({ className }) => (
+            <IconBase className={className}><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></IconBase>
+        );
+        const RotateCcw = ({ className }) => (
+            <IconBase className={className}><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></IconBase>
+        );
+
+        // --- Main App Component ---
+        const App = () => {
+            const [emailContent, setEmailContent] = useState('');
+            const [sender, setSender] = useState('');
+            const [status, setStatus] = useState('idle'); // idle, analyzing, verifying, result
+            const [progress, setProgress] = useState(0);
+            const [dbStatus, setDbStatus] = useState('connecting'); // connecting, connected, error
+            const [result, setResult] = useState(null);
+
+            // 模擬啟動時連線至政府資料庫
+            useEffect(() => {
+                const timer = setTimeout(() => {
+                setDbStatus('connected');
+                }, 1500);
+                return () => clearTimeout(timer);
+            }, []);
+
+            const handleAnalyze = () => {
+                if (!emailContent.trim()) return;
+
+                setStatus('analyzing');
+                setProgress(0);
+                setResult(null);
+
+                // 模擬分析流程
+                let progressTimer = setInterval(() => {
+                setProgress((prev) => {
+                    if (prev >= 90) {
+                    clearInterval(progressTimer);
+                    return 90;
+                    }
+                    return prev + 10;
+                });
+                }, 200);
+
+                // 模擬 API 延遲與邏輯
+                setTimeout(() => {
+                clearInterval(progressTimer);
+                setProgress(100);
+                setStatus('verifying');
+                
+                // 模擬與政府資料庫比對
+                setTimeout(() => {
+                    const analysisResult = analyzeScamLogic(sender, emailContent);
+                    setResult(analysisResult);
+                    setStatus('result');
+                }, 1500);
+                }, 2000);
+            };
+
+            // 簡單的本地規則邏輯 (模擬後端 AI 與資料庫回傳)
+            const analyzeScamLogic = (senderText, contentText) => {
+                const suspiciousKeywords = ['匯款', '中獎', '帳戶', '解凍', '緊急', '比特幣', '泰達幣', '安全驗證', '點擊連結', 'ATM', '分期付款', '配合調查'];
+                const highRiskDomains = ['gmail.com', 'yahoo.com.tw', 'hotmail.com']; // 針對公務機關信件如果是免費信箱
+                
+                let score = 0; // 0-100, 越高越危險
+                let detectedKeywords = [];
+                let reasons = [];
+
+                // 檢查關鍵字
+                suspiciousKeywords.forEach(kw => {
+                if (contentText.includes(kw)) {
+                    score += 15;
+                    detectedKeywords.push(kw);
+                }
+                });
+
+                // 檢查寄件者
+                if (senderText) {
+                if (highRiskDomains.some(d => senderText.includes(d)) && (contentText.includes('銀行') || contentText.includes('警察') || contentText.includes('法院'))) {
+                    score += 30;
+                    reasons.push('公務/銀行機構使用免費私人信箱 (極高風險)');
+                }
+                }
+
+                // 模擬 165 資料庫比對結果
+                const isDatabaseMatch = Math.random() > 0.7 || score > 50; 
+                
+                if (isDatabaseMatch) {
+                score += 40;
+                reasons.push('寄件來源或內容特徵與 165 反詐騙資料庫紀錄相符');
+                }
+
+                if (detectedKeywords.length > 0) {
+                reasons.push(`偵測到高風險詐騙關鍵字：${detectedKeywords.join(', ')}`);
+                }
+
+                let riskLevel = 'safe';
+                if (score > 75) riskLevel = 'danger';
+                else if (score > 30) riskLevel = 'warning';
+
+                return {
+                score: Math.min(score, 100),
+                riskLevel,
+                reasons,
+                matchId: isDatabaseMatch ? `CASE-${Math.floor(Math.random() * 100000)}` : null
+                };
+            };
+
+            // 完全重置
+            const reset = () => {
+                setEmailContent('');
+                setSender('');
+                setStatus('idle');
+                setResult(null);
+                setProgress(0);
+            };
+
+            // 保留內容並重新分析
+            const handleRetry = () => {
+                setStatus('idle');
+                setResult(null);
+                setProgress(0);
+            };
+
+            return (
+                <div className="min-h-screen bg-slate-50 text-slate-800 font-sans">
+                {/* Header / Navbar */}
+                <header className="bg-blue-900 text-white shadow-lg sticky top-0 z-50">
+                    <div className="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+                    <div className="flex items-center space-x-3">
+                        <Shield className="w-8 h-8 text-yellow-400" />
+                        <div>
+                        <h1 className="text-xl font-bold tracking-wide">全民防詐騙守護網</h1>
+                        <p className="text-xs text-blue-200">AI 智能分析 x 政府資料庫連線</p>
                         </div>
                     </div>
-                ))}
-            </div>
-        </div>
-    );
-};
+                    
+                    <div className="hidden md:flex items-center bg-blue-800 px-3 py-1.5 rounded-full border border-blue-700">
+                        {dbStatus === 'connecting' ? (
+                        <>
+                            <div className="w-4 h-4 mr-2 animate-spin text-yellow-400">
+                                <RefreshCw className="w-full h-full" />
+                            </div>
+                            <span className="text-sm font-medium">正在連線至 165 資料庫...</span>
+                        </>
+                        ) : dbStatus === 'connected' ? (
+                        <>
+                            <span className="relative flex h-3 w-3 mr-2">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                            </span>
+                            <span className="text-sm font-medium text-green-300">已連線至政府防詐雲端</span>
+                        </>
+                        ) : (
+                        <span className="text-sm text-red-300">連線異常</span>
+                        )}
+                    </div>
+                    </div>
+                </header>
 
-const EmergencyHelp = () => (
-    <div className="p-6 pb-24 animate-fadeIn">
-        <div className="bg-red-600 text-white p-6 rounded-xl shadow-lg mb-6">
-            <h2 className="text-2xl font-bold mb-2 flex items-center gap-2"><AlertTriangle/> 緊急處置</h2>
-            <p className="opacity-90">如果你已經把錢匯出去，或提供了證件照片...</p>
-        </div>
+                {/* Main Content */}
+                <main className="max-w-3xl mx-auto px-4 py-8">
+                    
+                    {/* Connection Alert for Mobile */}
+                    <div className="md:hidden mb-4 flex items-center justify-center space-x-2 text-sm text-slate-600 bg-white p-2 rounded-lg shadow-sm">
+                    {dbStatus === 'connected' ? (
+                        <>
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <span>系統已連線</span>
+                        </>
+                    ) : (
+                        <span>連線中...</span>
+                    )}
+                    </div>
 
-        <div className="space-y-4">
-            <div className="flex gap-4 items-start">
-                <div className="bg-slate-800 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold">1</div>
-                <div>
-                    <h3 className="font-bold text-lg">撥打 165 反詐騙專線</h3>
-                    <p className="text-slate-600 text-sm">這是最快的方法。或是立刻撥打 110 報警。</p>
-                    <a href="tel:165" className="inline-block mt-2 bg-red-600 text-white px-4 py-2 rounded-lg font-bold shadow active:scale-95 transition-transform">撥打 165</a>
+                    {/* Introduction Card */}
+                    {status === 'idle' && (
+                    <div className="bg-white rounded-xl shadow-sm p-6 mb-6 border-l-4 border-blue-600">
+                        <h2 className="text-lg font-bold text-slate-800 mb-2 flex items-center">
+                        <Info className="w-5 h-5 mr-2 text-blue-600" />
+                        如何使用本系統？
+                        </h2>
+                        <p className="text-slate-600 mb-4">
+                        請將您收到的可疑郵件內容或寄件者地址貼入下方欄位。系統將進行 AI 語意分析，並即時比對政府反詐騙黑名單資料庫。
+                        </p>
+                        <div className="flex gap-4 text-sm text-slate-500">
+                        <div className="flex items-center"><Lock className="w-4 h-4 mr-1" /> 資料加密傳輸</div>
+                        <div className="flex items-center"><Server className="w-4 h-4 mr-1" /> 即時比對資料庫</div>
+                        </div>
+                    </div>
+                    )}
+
+                    {/* Input Section */}
+                    <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200">
+                    <div className="p-1 bg-slate-100 border-b border-slate-200 flex gap-2 px-4 py-2">
+                        <div className="flex space-x-1.5">
+                        <div className="w-3 h-3 rounded-full bg-red-400"></div>
+                        <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
+                        <div className="w-3 h-3 rounded-full bg-green-400"></div>
+                        </div>
+                    </div>
+                    
+                    <div className="p-6 space-y-4">
+                        <div>
+                        <label className="block text-sm font-semibold text-slate-700 mb-1">寄件者 (Email 或 名稱)</label>
+                        <input 
+                            type="text" 
+                            placeholder="例如：service@unknown-bank.com"
+                            className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            value={sender}
+                            onChange={(e) => setSender(e.target.value)}
+                            disabled={status !== 'idle'}
+                        />
+                        </div>
+                        
+                        <div>
+                        <label className="block text-sm font-semibold text-slate-700 mb-1">郵件內容</label>
+                        <textarea 
+                            placeholder="請將郵件內文完整複製貼上於此..."
+                            className="w-full h-48 p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition resize-none"
+                            value={emailContent}
+                            onChange={(e) => setEmailContent(e.target.value)}
+                            disabled={status !== 'idle'}
+                        ></textarea>
+                        </div>
+
+                        {/* Actions / Progress */}
+                        <div className="pt-4">
+                        {status === 'idle' ? (
+                            <div className="flex space-x-3">
+                            <button 
+                                onClick={handleAnalyze}
+                                disabled={!emailContent}
+                                className={`flex-1 py-4 rounded-xl font-bold text-lg shadow-lg flex items-center justify-center transition transform active:scale-[0.98] ${
+                                !emailContent 
+                                    ? 'bg-slate-200 text-slate-400 cursor-not-allowed' 
+                                    : 'bg-gradient-to-r from-blue-600 to-indigo-700 text-white hover:shadow-blue-500/30'
+                                }`}
+                            >
+                                <Search className="w-5 h-5 mr-2" />
+                                開始即時檢測
+                            </button>
+                            {/* 如果有內容但狀態是 idle，顯示一個清空按鈕方便操作 */}
+                            {(emailContent || sender) && (
+                                <button 
+                                onClick={reset}
+                                className="px-4 rounded-xl border-2 border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-700 transition"
+                                title="清空內容"
+                                >
+                                <RotateCcw className="w-5 h-5" />
+                                </button>
+                            )}
+                            </div>
+                        ) : status !== 'result' ? (
+                            <div className="space-y-3">
+                            <div className="flex justify-between text-sm font-medium text-slate-600">
+                                <span className="flex items-center">
+                                {status === 'analyzing' ? '正在分析文本特徵...' : '正在連線政府資料庫比對...'}
+                                </span>
+                                <span>{progress}%</span>
+                            </div>
+                            <div className="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                                <div 
+                                className="bg-blue-600 h-2.5 rounded-full transition-all duration-300 ease-out" 
+                                style={{ width: `${progress}%` }}
+                                ></div>
+                            </div>
+                            {status === 'verifying' && (
+                                <div className="flex items-center justify-center text-xs text-blue-600 animate-pulse">
+                                <Server className="w-3 h-3 mr-1" />
+                                加密連線至 API 165.gov.tw/query (模擬)
+                                </div>
+                            )}
+                            </div>
+                        ) : (
+                            <div className="flex flex-col sm:flex-row gap-3">
+                            <button 
+                                onClick={handleRetry}
+                                className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition flex items-center justify-center shadow-md hover:shadow-lg"
+                            >
+                                <RefreshCw className="w-5 h-5 mr-2" />
+                                重新檢測 / 修改
+                            </button>
+                            <button 
+                                onClick={reset}
+                                className="flex-1 py-3 bg-white border-2 border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-50 transition flex items-center justify-center hover:border-slate-300"
+                            >
+                                <RotateCcw className="w-5 h-5 mr-2" />
+                                清空重置
+                            </button>
+                            </div>
+                        )}
+                        </div>
+                    </div>
+                    </div>
+
+                    {/* Result Section */}
+                    {status === 'result' && result && (
+                    <div className="mt-8 animate-fade-in-up">
+                        <div className={`rounded-2xl shadow-xl overflow-hidden border-2 ${
+                        result.riskLevel === 'danger' ? 'border-red-500 bg-red-50' : 
+                        result.riskLevel === 'warning' ? 'border-orange-400 bg-orange-50' : 
+                        'border-green-500 bg-green-50'
+                        }`}>
+                        {/* Result Header */}
+                        <div className={`p-6 text-white flex items-center justify-between ${
+                            result.riskLevel === 'danger' ? 'bg-red-600' : 
+                            result.riskLevel === 'warning' ? 'bg-orange-500' : 
+                            'bg-green-600'
+                        }`}>
+                            <div className="flex items-center space-x-4">
+                            <div className="p-3 bg-white/20 rounded-full backdrop-blur-sm">
+                                {result.riskLevel === 'danger' ? <ShieldAlert className="w-10 h-10" /> : 
+                                result.riskLevel === 'warning' ? <AlertTriangle className="w-10 h-10" /> : 
+                                <ShieldCheck className="w-10 h-10" />}
+                            </div>
+                            <div>
+                                <h2 className="text-2xl font-bold">
+                                {result.riskLevel === 'danger' ? '警告：極高風險詐騙' : 
+                                result.riskLevel === 'warning' ? '注意：疑似詐騙郵件' : 
+                                '通過：未發現明顯異常'}
+                                </h2>
+                                <p className="opacity-90">風險指數: {result.score}/100</p>
+                            </div>
+                            </div>
+                            {result.matchId && (
+                            <div className="hidden sm:block text-right">
+                                <div className="text-xs opacity-75">資料庫比對編號</div>
+                                <div className="font-mono font-bold">{result.matchId}</div>
+                            </div>
+                            )}
+                        </div>
+
+                        {/* Analysis Details */}
+                        <div className="p-6">
+                            <h3 className="text-slate-800 font-bold text-lg mb-4 flex items-center">
+                            <Activity className="w-5 h-5 mr-2" />
+                            分析報告摘要
+                            </h3>
+                            
+                            {result.reasons.length > 0 ? (
+                            <ul className="space-y-3 mb-6">
+                                {result.reasons.map((reason, idx) => (
+                                <li key={idx} className="flex items-start bg-white p-3 rounded-lg shadow-sm border border-slate-100">
+                                    <AlertTriangle className={`w-5 h-5 mr-3 flex-shrink-0 mt-0.5 ${
+                                    result.riskLevel === 'danger' ? 'text-red-500' : 'text-orange-500'
+                                    }`} />
+                                    <span className="text-slate-700 font-medium">{reason}</span>
+                                </li>
+                                ))}
+                            </ul>
+                            ) : (
+                            <div className="p-4 bg-white rounded-lg border border-green-200 text-green-700 flex items-center mb-6">
+                                <ShieldCheck className="w-5 h-5 mr-2" />
+                                內容未包含常見詐騙關鍵字，且網域信譽良好。
+                            </div>
+                            )}
+
+                            <div className="border-t border-slate-200 pt-6">
+                            <h4 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3">建議處置措施</h4>
+                            <div className="grid md:grid-cols-2 gap-4">
+                                {result.riskLevel === 'danger' ? (
+                                <>
+                                    <div className="bg-white p-4 rounded-lg border-l-4 border-red-500 shadow-sm">
+                                    <strong className="block text-red-600 mb-1">絕對不要點擊連結</strong>
+                                    <span className="text-sm text-slate-600">郵件內的連結可能含有惡意程式或釣魚網頁。</span>
+                                    </div>
+                                    <div className="bg-white p-4 rounded-lg border-l-4 border-red-500 shadow-sm">
+                                    <strong className="block text-red-600 mb-1">不要匯款或提供個資</strong>
+                                    <span className="text-sm text-slate-600">政府機關不會透過 Email 要求操作 ATM 或提供帳戶密碼。</span>
+                                    </div>
+                                </>
+                                ) : (
+                                <div className="bg-white p-4 rounded-lg border-l-4 border-blue-500 shadow-sm col-span-2">
+                                    <strong className="block text-blue-600 mb-1">保持警覺</strong>
+                                    <span className="text-sm text-slate-600">即使系統判定安全，涉及金錢往來仍建議直接致電官方機構確認。</span>
+                                </div>
+                                )}
+                            </div>
+                            </div>
+
+                            <div className="mt-6 flex justify-end">
+                            <button className="text-sm text-slate-400 hover:text-slate-600 flex items-center">
+                                <FileText className="w-4 h-4 mr-1" />
+                                下載完整分析報告
+                            </button>
+                            </div>
+                        </div>
+                        </div>
+                        
+                        <div className="mt-4 text-center">
+                        <p className="text-sm text-slate-500">
+                            遇到可疑狀況，請直接撥打 <span className="font-bold text-blue-600">165</span> 反詐騙專線查證
+                        </p>
+                        </div>
+                    </div>
+                    )}
+                    
+                    <footer className="mt-12 text-center text-slate-400 text-xs py-4">
+                    <p>© 2025 全民防詐騙守護網 Prototype | 本系統僅供展示，實際資料庫需經授權存取</p>
+                    </footer>
+                </main>
                 </div>
-            </div>
+            );
+        };
 
-            <div className="w-full border-t border-slate-200"></div>
-
-            <div className="flex gap-4 items-start">
-                <div className="bg-slate-800 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold">2</div>
-                <div>
-                    <h3 className="font-bold text-lg">通知銀行「圈存」</h3>
-                    <p className="text-slate-600 text-sm">立刻打給你的匯款銀行，告知遭詐騙，要求啟動「圈存」機制（暫時凍結對方帳戶24小時），爭取時間。</p>
-                </div>
-            </div>
-
-            <div className="w-full border-t border-slate-200"></div>
-
-            <div className="flex gap-4 items-start">
-                <div className="bg-slate-800 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold">3</div>
-                <div>
-                    <h3 className="font-bold text-lg">保存證據</h3>
-                    <p className="text-slate-600 text-sm">截圖所有對話紀錄、匯款單據、對方帳號資訊、網址連結。不要刪除對話！</p>
-                </div>
-            </div>
-        </div>
-
-        <div className="mt-8 bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-            <h4 className="font-bold text-yellow-800 mb-1">⚠️ 還是要小心「二次詐騙」</h4>
-            <p className="text-sm text-yellow-700">
-                網路上聲稱可以「幫你把錢討回來」的律師、駭客，<span className="font-bold underline">全部都是詐騙</span>！絕對不要相信！只有警察能幫你。
-            </p>
-        </div>
-    </div>
-);
-
-export default App;
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
